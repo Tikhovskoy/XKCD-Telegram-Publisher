@@ -11,14 +11,17 @@ def fetch_comic():
     Возвращает JSON с данными о комиксе.
     """
     last_comic_url = "https://xkcd.com/info.0.json"
-    response = requests.get(last_comic_url)
+    response = requests.get(last_comic_url, timeout=10)
     response.raise_for_status()
 
     last_comic_num = response.json()["num"]
     random_comic_num = random.randint(1, last_comic_num)
+    
+    while random_comic_num == 404:
+        random_comic_num = random.randint(1, last_comic_num)
+        
     comic_url = f"https://xkcd.com/{random_comic_num}/info.0.json"
-
-    response = requests.get(comic_url)
+    response = requests.get(comic_url, timeout=10)
     response.raise_for_status()
     
     return response.json()
