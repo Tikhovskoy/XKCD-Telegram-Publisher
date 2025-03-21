@@ -12,14 +12,12 @@ def publish_comic(bot, channel_id):
     """
     Скачивает случайный комикс и публикует его в Telegram-канале с комментариями.
     """
-    # Получение данных комикса
     try:
         comic_data = fetch_comic()
     except requests.exceptions.RequestException as e:
         logging.error(f"Ошибка при получении комикса: {e}")
         return
 
-    # Сохранение комикса на диск
     try:
         files_dir = os.getenv("FILES_DIR", "files")
         comic_image = save_comic(comic_data, files_dir)
@@ -27,7 +25,6 @@ def publish_comic(bot, channel_id):
         logging.error(f"Ошибка при сохранении комикса: {e}")
         return
 
-    # Отправка комикса в Telegram
     try:
         with open(comic_image, "rb") as photo:
             bot.send_photo(
@@ -44,7 +41,6 @@ def publish_comic(bot, channel_id):
         logging.error(f"Неожиданная ошибка при отправке комикса: {e}")
         return
 
-    # Удаление локального файла с изображением
     try:
         os.remove(comic_image)
     except OSError as e:
