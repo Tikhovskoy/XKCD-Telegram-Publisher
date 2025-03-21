@@ -11,20 +11,24 @@ def publish_comic(bot, channel_id):
     Скачивает случайный комикс и публикует его в Telegram-канале с комментариями.
     """
     try:
-        comic_data = fetch_comic()  # Загружаем случайный комикс
-        comic_image = save_comic(comic_data)  # Сохраняем комикс в папке files
+        comic_data = fetch_comic()
+        comic_image = save_comic(comic_data)
         
         with open(comic_image, "rb") as photo:
             bot.send_photo(
                 chat_id=channel_id,
                 photo=photo,
-                caption=f"{comic_data['title']}\n\n{comic_data['alt']}"
+                caption=f"{comic_data['title']}\n\n{comic_data['alt']}",
+                timeout=60
             )
         
-        logging.info(f"Опубликован комикс: {comic_image}")
+        logging.info(f"Комикс опубликован: {comic_image}")
         
-        os.remove(comic_image)
-    
+        try:
+            os.remove(comic_image)
+        except Exception as e:
+            logging.error(f"Ошибка при удалении файла: {e}")
+            
     except Exception as e:
         logging.error(f"Ошибка при публикации комикса: {e}")
 
