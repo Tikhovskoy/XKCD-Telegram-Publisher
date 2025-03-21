@@ -49,13 +49,13 @@ def save_comic(comic_data, directory="files"):
 
     return image_path
 
-
 if __name__ == "__main__":
     config = get_config()
     print("Конфигурация загружена:", config)
     
     comic_data = fetch_comic()
     print("Скачан комикс:", comic_data["title"])
+    print("Комментарий к комиксу:", comic_data["alt"])
 
     image_path = save_comic(comic_data)
     print("Комикс сохранён по пути:", image_path)
