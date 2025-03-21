@@ -1,6 +1,8 @@
 import os
 import logging
+import requests
 from telegram import Bot
+from telegram.error import TelegramError
 from fetch_images import fetch_comic, save_comic
 from dotenv import load_dotenv
 
@@ -10,11 +12,23 @@ def publish_comic(bot, channel_id):
     """
     Скачивает случайный комикс и публикует его в Telegram-канале с комментариями.
     """
+    # Получение данных комикса
     try:
         comic_data = fetch_comic()
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Ошибка при получении комикса: {e}")
+        return
+
+    # Сохранение комикса на диск
+    try:
         files_dir = os.getenv("FILES_DIR", "files")
         comic_image = save_comic(comic_data, files_dir)
-        
+    except (requests.exceptions.RequestException, OSError) as e:
+        logging.error(f"Ошибка при сохранении комикса: {e}")
+        return
+
+    # Отправка комикса в Telegram
+    try:
         with open(comic_image, "rb") as photo:
             bot.send_photo(
                 chat_id=channel_id,
@@ -22,16 +36,19 @@ def publish_comic(bot, channel_id):
                 caption=f"{comic_data['title']}\n\n{comic_data['alt']}",
                 timeout=60
             )
-        
         logging.info(f"Комикс опубликован: {comic_image}")
-        
-        try:
-            os.remove(comic_image)
-        except Exception as e:
-            logging.error(f"Ошибка при удалении файла: {e}")
-            
+    except TelegramError as e:
+        logging.error(f"Ошибка при отправке комикса в Telegram: {e}")
+        return
     except Exception as e:
-        logging.error(f"Ошибка при публикации комикса: {e}")
+        logging.error(f"Неожиданная ошибка при отправке комикса: {e}")
+        return
+
+    # Удаление локального файла с изображением
+    try:
+        os.remove(comic_image)
+    except OSError as e:
+        logging.error(f"Ошибка при удалении файла: {e}")
 
 def main():
     load_dotenv() 
