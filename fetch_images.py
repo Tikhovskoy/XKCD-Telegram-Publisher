@@ -29,7 +29,6 @@ def save_comic(comic_data, files_dir):
     Сохраняет изображение комикса на диск.
     Возвращает путь к сохраненному изображению.
     """
-
     image_url = comic_data["img"]
     title = comic_data["title"].replace(" ", "_").replace("/", "-")
     image_path = os.path.join(files_dir, f"{title}.png")
