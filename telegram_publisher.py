@@ -6,8 +6,6 @@ from telegram.error import TelegramError
 from fetch_images import fetch_comic, save_comic
 from dotenv import load_dotenv
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
 def publish_comic(bot, channel_id):
     """
     Скачивает случайный комикс и публикует его в Telegram-канале с комментариями.
@@ -48,6 +46,7 @@ def publish_comic(bot, channel_id):
 
 def main():
     load_dotenv() 
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
     TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
     TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")

@@ -3,8 +3,6 @@ import requests
 import random
 import logging
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
 def fetch_comic():
     """
     Загружает случайный комикс с сайта XKCD.
