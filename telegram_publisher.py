@@ -22,30 +22,30 @@ def main():
     load_dotenv()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
     
-    TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-    TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")
+    telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    telegram_channel_id = os.getenv("TELEGRAM_CHANNEL_ID")
     files_dir = os.getenv("FILES_DIR", "files")
 
-    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHANNEL_ID:
+    if not telegram_bot_token or not telegram_channel_id:
         logging.error("Не найдены TELEGRAM_BOT_TOKEN или TELEGRAM_CHANNEL_ID")
         return
 
     os.makedirs(files_dir, exist_ok=True)
-    bot = Bot(token=TELEGRAM_BOT_TOKEN)
+    bot = Bot(token=telegram_bot_token)
     
     comic_image = None
     try:
         comic_data = fetch_comic() 
-        comic_image = save_comic(comic_data, files_dir)
-        send_comic(bot, TELEGRAM_CHANNEL_ID, comic_data, comic_image)
-    except Exception as e:
-        logging.error(f"Ошибка в процессе публикации комикса: {e}")
+        comic_image = save_comic(comic_data, files_dir) 
+        send_comic(bot, telegram_channel_id, comic_data, comic_image) 
+    except Exception as error:
+        logging.error(f"Ошибка в процессе публикации комикса: {error}")
     finally:
         if comic_image:
             try:
                 cleanup_comic(comic_image)
-            except Exception as e:
-                logging.error(f"Ошибка при удалении файла: {e}")
+            except Exception as error:
+                logging.error(f"Ошибка при удалении файла: {error}")
 
 if __name__ == "__main__":
     main()
