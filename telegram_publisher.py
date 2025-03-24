@@ -51,11 +51,13 @@ def main():
 
     TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
     TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")
+    files_dir = os.getenv("FILES_DIR", "files")
 
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHANNEL_ID:
         logging.error("Не найдены TELEGRAM_BOT_TOKEN или TELEGRAM_CHANNEL_ID")
         return
 
+    os.makedirs(files_dir, exist_ok=True)
     bot = Bot(token=TELEGRAM_BOT_TOKEN)
     publish_comic(bot, TELEGRAM_CHANNEL_ID)
 
