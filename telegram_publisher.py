@@ -22,8 +22,13 @@ def main():
     load_dotenv()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
     
-    telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
-    telegram_channel_id = os.getenv("TELEGRAM_CHANNEL_ID")
+    try:
+        telegram_bot_token = os.environ["TELEGRAM_BOT_TOKEN"]
+        telegram_channel_id = os.environ["TELEGRAM_CHANNEL_ID"]
+    except KeyError as key_error:
+        logging.error(f"Обязательная переменная окружения не найдена: {key_error}")
+        return
+    
     files_dir = os.getenv("FILES_DIR", "files")
 
     if not telegram_bot_token or not telegram_channel_id:
