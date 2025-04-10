@@ -2,7 +2,7 @@ import os
 import logging
 from telegram import Bot
 from telegram.error import TelegramError
-from fetch_images import fetch_comic, save_comic, cleanup_comic
+from fetch_images import fetch_comic, save_comic
 from dotenv import load_dotenv
 
 
@@ -50,7 +50,8 @@ def main():
     finally:
         if comic_image:
             try:
-                cleanup_comic(comic_image)
+                os.remove(comic_image)
+                logging.info(f"Файл удален: {comic_image}")
             except Exception as error:
                 logging.error(f"Ошибка при удалении файла: {error}")
 

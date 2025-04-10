@@ -44,11 +44,3 @@ def save_comic(comic_data, files_dir):
     logging.info(f"Сохранен комикс: {image_path}")
 
     return image_path
-
-
-def cleanup_comic(comic_image):
-    """
-    Удаляет локально сохраненный файл комикса.
-    """
-    os.remove(comic_image)
-    logging.info(f"Файл удален: {comic_image}")
