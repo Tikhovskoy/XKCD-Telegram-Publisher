@@ -5,6 +5,7 @@ from telegram.error import TelegramError
 from fetch_images import fetch_comic, save_comic, cleanup_comic
 from dotenv import load_dotenv
 
+
 def send_comic(bot, channel_id, comic_data, comic_image):
     """
     Отправляет комикс в Telegram-канал.
@@ -18,6 +19,7 @@ def send_comic(bot, channel_id, comic_data, comic_image):
         )
     logging.info(f"Комикс опубликован: {comic_image}")
 
+
 def main():
     load_dotenv()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -29,8 +31,8 @@ def main():
         logging.error(f"Обязательная переменная окружения не найдена: {key_error}")
         return
     
-    files_dir = os.getenv("FILES_DIR", "files")
-
+    files_dir = os.environ.get("FILES_DIR", "files")
+    
     if not telegram_bot_token or not telegram_channel_id:
         logging.error("Не найдены TELEGRAM_BOT_TOKEN или TELEGRAM_CHANNEL_ID")
         return
@@ -40,9 +42,9 @@ def main():
     
     comic_image = None
     try:
-        comic_data = fetch_comic() 
-        comic_image = save_comic(comic_data, files_dir) 
-        send_comic(bot, telegram_channel_id, comic_data, comic_image) 
+        comic_data = fetch_comic()
+        comic_image = save_comic(comic_data, files_dir)
+        send_comic(bot, telegram_channel_id, comic_data, comic_image)
     except Exception as error:
         logging.error(f"Ошибка в процессе публикации комикса: {error}")
     finally:
@@ -51,6 +53,7 @@ def main():
                 cleanup_comic(comic_image)
             except Exception as error:
                 logging.error(f"Ошибка при удалении файла: {error}")
+
 
 if __name__ == "__main__":
     main()

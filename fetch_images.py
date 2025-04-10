@@ -3,6 +3,7 @@ import requests
 import random
 import logging
 
+
 def fetch_comic():
     """
     Загружает случайный комикс с сайта XKCD.
@@ -14,15 +15,16 @@ def fetch_comic():
 
     last_comic_num = response.json()["num"]
     random_comic_num = random.randint(1, last_comic_num)
-    
+
     while random_comic_num == 404:
         random_comic_num = random.randint(1, last_comic_num)
-        
+
     comic_url = f"https://xkcd.com/{random_comic_num}/info.0.json"
     response = requests.get(comic_url, timeout=10)
     response.raise_for_status()
-    
+
     return response.json()
+
 
 def save_comic(comic_data, files_dir):
     """
@@ -42,6 +44,7 @@ def save_comic(comic_data, files_dir):
     logging.info(f"Сохранен комикс: {image_path}")
 
     return image_path
+
 
 def cleanup_comic(comic_image):
     """
